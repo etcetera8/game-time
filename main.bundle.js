@@ -44,7 +44,7 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Platform = __webpack_require__(1);
+	const Platform = __webpack_require__(1);
 
 	const canvas = document.getElementById('canvas');
 	const c = canvas.getContext('2d');
