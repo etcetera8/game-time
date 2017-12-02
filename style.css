@@ -4,6 +4,18 @@ body {
 
 #canvas {
   background: black;
-  display: block;
-  margin: auto;
+  display: inline;
+  left: 0;
+  right: 0;
+  margin: auto;  
+  position: absolute;
+  z-index: -1;
+}
+
+#canvas-start-page {
+  background: rgba(200, 10, 10, 0.8);
+  left: 0;
+  right: 0;
+  margin: 10% auto;
+  position: absolute;
 }

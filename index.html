@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <title>Joust</title>
-  <canvas id='canvas' width='800' height='600'></canvas>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <canvas id='canvas' width='800' height='600' style="z-index: 0;"></canvas>
+  <canvas id='canvas-start-page' width='400' height='350' style="z-index: 1;">
+  </canvas>
   <script src="main.bundle.js"></script>
 </body>
 </html>
