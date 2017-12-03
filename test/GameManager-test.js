@@ -26,4 +26,24 @@ describe('GameManager', function() {
     assert.equal(gameManager.p2Lives, 3);
   })
 
+  it('should not be running by default', function() {
+    assert.equal(gameManager.isRunning, false);
+  })
+
+  it('should not be paused by default', function() {
+    assert.equal(gameManager.isPaused, false);
+  })
+
+  it('should have functions', function() {
+    assert.isFunction(gameManager.startPageDraw, true);
+    assert.isFunction(gameManager.gameOver, true);
+    assert.isFunction(gameManager.pauseText, true);
+    assert.isFunction(gameManager.scoreBoxP1, true);
+    assert.isFunction(gameManager.scoreBoxP2, true);
+    assert.isFunction(gameManager.level2, true);
+  })
+
+  it('should increment the timer in gameOver', function() {
+    //gameManager.gameOver(c)
+  })
 })
