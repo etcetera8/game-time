@@ -172,5 +172,11 @@ describe('Player mechanics', function() {
     assert.equal(p.x, 0); //after teleport
   })
 
-  
+  it('should have gravity', function() {
+    let p = new Player(772, 500, 0, 0, 32, 32);
+    assert.equal(p.y, 500);
+    p.gravity(1);
+    assert.equal(p.y, 501);
+    
+  })
 })
