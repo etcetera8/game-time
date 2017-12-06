@@ -1,6 +1,7 @@
 const { assert } = require('chai');
 const Player = require('../lib/Player.js');
-const Platform = require('../lib/Platform.js')
+const Platform = require('../lib/Platform.js');
+const GameManager = require('../lib/GameManager.js');
 
 describe('Player', function() {
   let player;
@@ -26,7 +27,7 @@ describe('Player', function() {
     assert.equal(player.sy, 0);
     assert.equal(player.swidth, 32);
     assert.equal(player.sheight, 32);
-  })
+  });
 
   it('should have default parameters', function() {
     assert.equal(player.dx, 0);
@@ -37,6 +38,7 @@ describe('Player', function() {
     assert.equal(player.alive, true);
     assert.equal(player.timer, 0);
   });
+
   it('should have functions', function() {
     assert.isFunction(player.draw, true);
     assert.isFunction(player.platformPlayerCollision, true);
@@ -45,24 +47,25 @@ describe('Player', function() {
     assert.isFunction(player.teleport, true);
     assert.isFunction(player.gravity, true);
     assert.isFunction(player.respawn, true);
-  })
+  });
 })
 
 describe('Player Collisions', function() {
+  
   it('should stop when colliding with bottom of platform', function() {
     let p = new Player(150, 170, 0, 0, 32, 32);    
     let plat = new Platform(150, 150, 100, 16, 0, 0, 64, 16);
     let arr = [];
-    arr.push(plat)    
-    p.platformPlayerCollision(arr) //before touch
-    assert.equal(p.y, 170)  
+    arr.push(plat);    
+    p.platformPlayerCollision(arr); //before touch
+    assert.equal(p.y, 170);  
     p.y = 166;
-    p.platformPlayerCollision(arr) //at touch
-    assert.equal(p.y, 178)
+    p.platformPlayerCollision(arr); //at touch
+    assert.equal(p.y, 178);
     p.y = 165;
-    p.platformPlayerCollision(arr) //after touch new y returned is heightbtw
-    assert.equal(p.y, 178)
-  })
+    p.platformPlayerCollision(arr); //after touch new y returned is heightbtw
+    assert.equal(p.y, 178);
+  });
 
   it('should stop when colliding with top of platform', function() {
     let p = new Player(150, 120, 0, 0, 32, 32);    
@@ -80,6 +83,69 @@ describe('Player Collisions', function() {
     p.platformPlayerCollision(arr); //after collision
     assert.equal(p.y, 122);
   })
-  
+
+  it('should bounce off of other player when left collision occurs', function() {
+    let p1 = new Player(150, 120, 0, 0, 32, 32);     
+    let p2 = new Player(200, 120, 0, 0, 32, 32);
+    let gm = new GameManager();
+
+    p1.playerToPlayerCollision(p1, p2, gm); //before collision
+    assert.equal(p1.x, 150);     
+    assert.equal(p2.x, 200);
+
+    p1.x = 201;
+    p1.playerToPlayerCollision(p1, p2, gm); //at collision
+    assert.equal(p1.x, 205);     
+    assert.equal(p2.x, 196);     
+  });
+
+   it('should bounce off of other player when right collision occurs', function() {
+    let p1 = new Player(200, 120, 0, 0, 32, 32);     
+    let p2 = new Player(150, 120, 0, 0, 32, 32);
+    let gm = new GameManager();
+
+    p1.playerToPlayerCollision(p1, p2, gm); //before collision
+    assert.equal(p1.x, 200);
+    assert.equal(p2.x, 150);     
+
+    p1.x = 149;
+    p1.playerToPlayerCollision(p1, p2, gm); //at collision
+    assert.equal(p1.x, 145);     
+    assert.equal(p2.x, 154);     
+  });
+
+   it('should kill other player when bottom collision occurs', function() {
+    let p1 = new Player(200, 80, 0, 0, 32, 32);     
+    let p2 = new Player(200, 120, 0, 0, 32, 32);
+    let gm = new GameManager();
+
+    p1.playerToPlayerCollision(p1, p2, gm); //before collision
+    assert.equal(p1.y, 80);
+    assert.equal(p2.y, 120);
+    assert.equal(p2.alive, true);
+    assert.equal(gm.p2Lives, 3);
+
+    p1.y = 93; //player 2 y - player 1 height
+    p1.playerToPlayerCollision(p1, p2, gm); //after collision
+    assert.equal(p1.y, 43);
+    assert.equal(p2.y, 120);
+    assert.equal(p2.alive, false);
+    assert.equal(gm.p2Lives, 2);
+   })
+
+   it('should die when collides with lava', function() {
+    let p1 = new Player(200, 500, 0, 0, 32, 32);     
+    let p2 = new Player(250, 120, 0, 0, 32, 32);
+    let gm = new GameManager();
+
+    p1.lavaCollision(p1, p2, gm); //before lava collision
+    assert.equal(p1.y, 500);
+    assert.equal(p1.alive, true);
+
+    p1.y = 522;
+    p1.lavaCollision(p1, p2, gm); //after lava collision
+    assert.equal(p1.alive, false);
+    assert.equal(gm.p1Lives, 2);
+   })
 
  })
