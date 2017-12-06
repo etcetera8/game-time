@@ -57,13 +57,13 @@ describe('Player Collisions', function() {
     let plat = new Platform(150, 150, 100, 16, 0, 0, 64, 16);
     let arr = [];
     arr.push(plat);    
-    p.platformPlayerCollision(arr); //before touch
+    p.platformPlayerCollision(arr);
     assert.equal(p.y, 170);  
     p.y = 166;
-    p.platformPlayerCollision(arr); //at touch
+    p.platformPlayerCollision(arr);
     assert.equal(p.y, 178);
     p.y = 165;
-    p.platformPlayerCollision(arr); //after touch new y returned is heightbtw
+    p.platformPlayerCollision(arr);
     assert.equal(p.y, 178);
   });
 
@@ -71,16 +71,16 @@ describe('Player Collisions', function() {
     let p = new Player(150, 120, 0, 0, 32, 32);    
     let plat = new Platform(150, 150, 100, 16, 0, 0, 64, 16);
     let arr = [];
-    arr.push(plat);    //p height plus p y
-    p.platformPlayerCollision(arr); //before collision
+    arr.push(plat);
+    p.platformPlayerCollision(arr);
     assert.equal(p.y, 120);
 
     p.y = 122;
-    p.platformPlayerCollision(arr); //at collision
+    p.platformPlayerCollision(arr);
     assert.equal(p.y, 122);
 
     p.y = 123;
-    p.platformPlayerCollision(arr); //after collision
+    p.platformPlayerCollision(arr);
     assert.equal(p.y, 122);
   })
 
@@ -89,12 +89,12 @@ describe('Player Collisions', function() {
     let p2 = new Player(200, 120, 0, 0, 32, 32);
     let gm = new GameManager();
 
-    p1.playerToPlayerCollision(p1, p2, gm); //before collision
+    p1.playerToPlayerCollision(p1, p2, gm);
     assert.equal(p1.x, 150);     
     assert.equal(p2.x, 200);
 
     p1.x = 201;
-    p1.playerToPlayerCollision(p1, p2, gm); //at collision
+    p1.playerToPlayerCollision(p1, p2, gm);
     assert.equal(p1.x, 205);     
     assert.equal(p2.x, 196);     
   });
@@ -104,12 +104,12 @@ describe('Player Collisions', function() {
     let p2 = new Player(150, 120, 0, 0, 32, 32);
     let gm = new GameManager();
 
-    p1.playerToPlayerCollision(p1, p2, gm); //before collision
+    p1.playerToPlayerCollision(p1, p2, gm);
     assert.equal(p1.x, 200);
     assert.equal(p2.x, 150);     
 
     p1.x = 149;
-    p1.playerToPlayerCollision(p1, p2, gm); //at collision
+    p1.playerToPlayerCollision(p1, p2, gm);
     assert.equal(p1.x, 145);     
     assert.equal(p2.x, 154);     
   });
@@ -119,14 +119,14 @@ describe('Player Collisions', function() {
     let p2 = new Player(200, 120, 0, 0, 32, 32);
     let gm = new GameManager();
 
-    p1.playerToPlayerCollision(p1, p2, gm); //before collision
+    p1.playerToPlayerCollision(p1, p2, gm);
     assert.equal(p1.y, 80);
     assert.equal(p2.y, 120);
     assert.equal(p2.alive, true);
     assert.equal(gm.p2Lives, 3);
 
-    p1.y = 93; //player 2 y - player 1 height
-    p1.playerToPlayerCollision(p1, p2, gm); //after collision
+    p1.y = 93;
+    p1.playerToPlayerCollision(p1, p2, gm);
     assert.equal(p1.y, 43);
     assert.equal(p2.y, 120);
     assert.equal(p2.alive, false);
@@ -138,16 +138,29 @@ describe('Player Collisions', function() {
     let p2 = new Player(250, 120, 0, 0, 32, 32);
     let gm = new GameManager();
 
-    p1.lavaCollision(p1, p2, gm); //before lava collision
+    p1.lavaCollision(p1, p2, gm);
     assert.equal(p1.y, 500);
     assert.equal(p1.alive, true);
 
     p1.y = 522;
-    p1.lavaCollision(p1, p2, gm); //after lava collision
+    p1.lavaCollision(p1, p2, gm); 
     assert.equal(p1.alive, false);
     assert.equal(gm.p1Lives, 2);
-   })
 
+    p1.respawn();                 
+    assert.isAbove(p1.timer, 0);
+    assert.equal(p1.x, 350);
+    assert.equal(p1.y, 400 - p1.height);
+    assert.equal(p1.width, 0);
+    assert.equal(p1.alive, false);
+    
+    p1.timer = 201;
+    p1.respawn();
+    p1.alive = true;
+    assert.equal(p1.width, 28);
+    assert.equal(p1.alive, true);
+    assert.equal(p1.timer, 0);
+   })
  })
 
 describe('Player mechanics', function() {
@@ -155,21 +168,21 @@ describe('Player mechanics', function() {
   it('should teleport across the screen left to right', function() {
     let p = new Player(1, 500, 0, 0, 32, 32);
     p.teleport(800);
-    assert.equal(p.x, 1); //before teleport
+    assert.equal(p.x, 1);
 
     p.x = -1;
     p.teleport(800);
-    assert.equal(p.x, 772); //after teleport
+    assert.equal(p.x, 772);
   })
 
   it('should teleport across the screen right to left', function() {
     let p = new Player(772, 500, 0, 0, 32, 32);
     p.teleport(800);
-    assert.equal(p.x, 772); //before teleport
+    assert.equal(p.x, 772);
 
     p.x = 773 + p.width;
     p.teleport(800);
-    assert.equal(p.x, 0); //after teleport
+    assert.equal(p.x, 0);
   })
 
   it('should have gravity', function() {
@@ -177,6 +190,14 @@ describe('Player mechanics', function() {
     assert.equal(p.y, 500);
     p.gravity(1);
     assert.equal(p.y, 501);
-    
+  })
+
+  it('should have a ceiling', function() {
+    let p = new Player(772, 1, 0, 0, 32, 32);
+    assert.equal(p.y, 1);
+    p.gravity(1);
+    p.y = -1;
+    p.gravity(1);
+    assert.equal(p.y, 0)
   })
 })
