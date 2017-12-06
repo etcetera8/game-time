@@ -35,15 +35,18 @@ describe('GameManager', function() {
   })
 
   it('should have functions', function() {
-    assert.isFunction(gameManager.startPageDraw, true);
     assert.isFunction(gameManager.gameOver, true);
     assert.isFunction(gameManager.pauseText, true);
-    assert.isFunction(gameManager.scoreBoxP1, true);
-    assert.isFunction(gameManager.scoreBoxP2, true);
+    assert.isFunction(gameManager.pausePosition, true);
+    assert.isFunction(gameManager.scoreBox, true);
     assert.isFunction(gameManager.level2, true);
   })
 
-  it('should increment the timer in gameOver', function() {
-    //gameManager.gameOver(c)
+  it('should have default gravity', function() {
+    assert.equal(gameManager.gravity, 1);
+  })
+
+  it('should have a timer', function() {
+    assert.equal(gameManager.timer, 0);
   })
 })
