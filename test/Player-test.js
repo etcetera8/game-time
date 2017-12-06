@@ -149,3 +149,16 @@ describe('Player Collisions', function() {
    })
 
  })
+
+describe('Player mechanics', function() {
+  
+  it('should teleport across the screen', function() {
+    let p = new Player(1, 500, 0, 0, 32, 32);
+    p.teleport(800);
+    assert.equal(p.x, 1); //before teleport
+
+    p.x = -1;
+    assert.equal(p.x, 772); //after teleport
+
+  })
+})
