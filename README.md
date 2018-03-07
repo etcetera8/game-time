@@ -1,6 +1,6 @@
 # Joust Clone
 
-[play the game](joust-clone.surge.sh)
+(joust-clone.surge.sh)
 
 One of my favorite arcade games of all time is Joust. Something about the art direction, the physics, and simple yet fun gameplay made me want to recreate it. This was my first attempt at utilzing HTML5's canvas, working with sprites, and using a game loop to clear and redraw the screen.
 
